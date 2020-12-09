@@ -27,10 +27,9 @@ class CheckersGame:
 
     def run(self):
         while not self.is_there_win:
-            pass
-            # print_pieces
-            # make_next_move()
-            # check_for_win()
+            self.print()
+            self.make_next_move()
+            self.check_for_win()
 
     def make_next_move(self):
         player = self.player[self.turn % 2]
@@ -75,3 +74,34 @@ class CheckersGame:
 
         player.pieces += (source, player.pieces[source])
         player.pieces -= source
+
+    def print(self):
+        print("--------------------------")
+        for i in range(64):
+            if i in self.player[0].pieces:
+                print(self.player[0].pieces[i], end="\t")
+            elif i in self.player[1].pieces:
+                print(self.player[1].pieces[i], end="\t")
+            elif (i / 8 % 2 + i % 2) % 2 == 0:
+                print("░", end="\t")
+            else:
+                print("\t ")
+
+            if (i + 1) % 8 == 0:
+                print()
+
+        print("----------------")
+        for i in range(8):
+            for j in range(8):
+                print(i * 8 + j, end="\t")
+            print()
+
+    def check_for_win(self):
+        if len(self.player[0].pieces == 0):
+            print(self.player[1].name + "won")
+            self.is_there_win = True
+        if len(self.player[1].pieces == 0):
+            print(self.player[0].name + "won")
+            self.is_there_win = True
+
+        self.turn += 1
