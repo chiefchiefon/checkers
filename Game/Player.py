@@ -1,5 +1,4 @@
 from Game.Piece import Piece
-from Game.Tile import Tile
 
 
 class Player:
@@ -15,10 +14,10 @@ class Player:
 
     def init_pieces(self, color):
         base = 48 * color.value
-        return {base + k: Tile(base + k, Piece()) for k in [0, 2, 4, 6, 11, 13, 15]}
+        return {base + k:  Piece() for k in [0, 2, 4, 6, 11, 13, 15]}
 
-    def __add__(self, tile):
-        self.pieces[tile.position] = tile
+    def __add__(self, index_piece):
+        self.pieces[index_piece[0]] = index_piece[1]
 
-    def __sub__(self, tile):
-        self.pieces.pop(tile.position)
+    def __sub__(self, index):
+        self.pieces.pop(index)

@@ -9,7 +9,14 @@ class Color(Enum):
 
 
 def get_position(player, pos):
-    return input(player.name + "enter your" + pos + "please [0..63]:")
+    pos = int(input(player.name + "enter your" + pos + "please [0..63]:"))
+    try:
+        while pos < 0 or pos > 63:
+            pos = int(input("an integer between 0 and 63 only is expected"))
+    except ValueError:
+        print("Please enter an integer")
+
+    return pos
 
 
 class CheckersGame:
@@ -66,4 +73,5 @@ class CheckersGame:
         if abs(destination - source) > 9:
             opponent.pieces -= abs(destination - source) // 2
 
+        player.pieces += (source, player.pieces[source])
         player.pieces -= source
