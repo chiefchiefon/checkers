@@ -5,6 +5,7 @@ class Player:
     def __init__(self, color):
         self.name = self.set_name()
         self.pieces = PlayersPieces(color)
+        self.color = color
 
     def set_name(self, name=None):
         if name is None:
