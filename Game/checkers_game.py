@@ -9,7 +9,7 @@ class Color(Enum):
 
 
 def get_position(player, pos):
-    pos = int(input(player.name + "enter your" + pos + "please [0..63]:"))
+    pos = int(input(player.name + pos + " please [0..63]:"))
     try:
         while pos < 0 or pos > 63:
             pos = int(input("an integer between 0 and 63 only is expected"))
@@ -35,9 +35,9 @@ class CheckersGame:
         player = self.player[self.turn % 2]
         opponent = self.player[(self.turn + 1) % 2]
 
-        source = get_position(player, "source")
+        source = get_position(player, " source")
         while source not in player.pieces:
-            print(player.name, "there is no piece of yours in", source, ". Please try again:")
+            print(player.name, " there is no piece of yours in ", source, ". Please try again:")
             source = get_position(player, "source")
 
         basic_steps = [7, 9]
@@ -47,45 +47,57 @@ class CheckersGame:
                         source + i * (1 - 2 * player.color.value) not in opponent.pieces and
                         0 <= source + i * (1 - 2 * player.color.value) < 64 and
                         (source + i * (1 - 2 * player.color.value)) // 8 - source // 8 == 1 * (1 - 2 * player.color.value)]
-        destinations.extend([source + i * (1 - 2 * player.color.value) for i in basic_steps if
+        destinations.extend([source + i * 2 * (1 - 2 * player.color.value) for i in basic_steps if
                             source + i * (1 - 2 * player.color.value) in opponent.pieces and
-                            0 <= source + i * (1 - 2 * player.color.value) < 64 and
-                            (source + i * (1 - 2 * player.color.value)) // 8 - source // 8 == 2 * (1 - 2 * player.color.value)])
-        destinations.extend(player.pieces[source].degree * [source + i * 2 for i in basic_steps if
+                            0 <= source + i * 2 * (1 - 2 * player.color.value) < 64 and
+                            (source + i * 2 * (1 - 2 * player.color.value)) // 8 - source // 8 == 2 * (1 - 2 * player.color.value)])
+        destinations.extend(player.pieces[source].degree.value * [source + i * 2 for i in basic_steps if
                                                             source + i * 2 < 64 and
                                                             source + i * 2 not in player.pieces and
                                                             source + i * 2 not in opponent.pieces and
                                                             (source + i * 2) // 8 - source // 8 == 2])
-        destinations.extend(player.pieces[source].degree * [source - i * 2 for i in basic_steps if
+        destinations.extend(player.pieces[source].degree.value * [source - i * 2 for i in basic_steps if
                                                             source - i * 2 >= 0 and
                                                             source - i * 2 not in player.pieces and
                                                             source - i * 2 not in opponent.pieces and
                                                             (source - i * 2) // 8 - source // 8 == -2])
-        print("Potentially, your", player.pieces[source].degree, "could move to one of:", destinations)
+        print(player.pieces[source].degree.name, " potential moves:", destinations)
+
+        while len(destinations) == 0:
+            print("Your ", player.pieces[source].degree.name, " has no where to move.")
+            source = get_position(player, "source")
 
         destination = get_position(player, "destination")
+        while destination not in destinations:
+            print("Destination ", destination, " is not in destinations options. Try again.")
+            destination = get_position(player, "destination")
         while destination in player.pieces:
             print(player.name, ", the destination you've chosen is occupied by a",
                   player.pieces[destination].degree, "of yours; you can't move there.")
-            destination = get_position(player, "destination")
+            destination = get_position(player, " destination")
 
         if abs(destination - source) > 9:
-            opponent.pieces -= abs(destination - source) // 2
+            opponent.sub((destination + source) // 2)
 
-        player.pieces += (source, player.pieces[source])
-        player.pieces -= source
+#        player.pieces += [source, player.pieces[source]]
+#        player.pieces += {"index": source, "piece": player.pieces[source]}
+#        player.pieces -= source
+        player.add(destination, player.pieces[source])
+        player.sub(source)
 
     def print(self):
         print("--------------------------")
         for i in range(64):
             if i in self.player[0].pieces:
-                print(self.player[0].pieces[i], end="\t")
+                # print(self.player[0].pieces[i], end=""),
+                print("P", end='\t')
             elif i in self.player[1].pieces:
-                print(self.player[1].pieces[i], end="\t")
-            elif (i / 8 % 2 + i % 2) % 2 == 0:
-                print("░", end="\t")
+                # print(self.player[1].pieces[i], end=""),
+                print("p", end='\t')
+            elif (i // 8 % 2 + i % 2) % 2 == 0:
+                print(" ", end='\t')
             else:
-                print("\t ")
+                print("░", end='\t')
 
             if (i + 1) % 8 == 0:
                 print()
@@ -97,10 +109,10 @@ class CheckersGame:
             print()
 
     def check_for_win(self):
-        if len(self.player[0].pieces == 0):
+        if len(self.player[0].pieces) == 0:
             print(self.player[1].name + "won")
             self.is_there_win = True
-        if len(self.player[1].pieces == 0):
+        if len(self.player[1].pieces) == 0:
             print(self.player[0].name + "won")
             self.is_there_win = True
 

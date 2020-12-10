@@ -14,3 +14,8 @@ class Piece:
         if self.degree is Degree.KING:
             return "King"
         return "Pawn"
+
+    def __str__(self):
+        if self.degree is Degree.KING:
+            return "KING"
+        return "PAWN"
