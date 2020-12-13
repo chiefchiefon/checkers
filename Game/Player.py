@@ -8,13 +8,13 @@ def init_pieces(color):
 
 class Player:
     def __init__(self, color):
+        self.color = color
         self.name = self.set_name()
         self.pieces = init_pieces(color)
-        self.color = color
 
     def set_name(self, name=None):
         if name is None:
-            return "Playerx"
+            return "Player " + self.color.name
         return name
 
     def __add__(self, index_piece):

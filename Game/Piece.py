@@ -11,11 +11,19 @@ class Piece:
         self.degree = Degree.PAWN
 
     def get_piece_degree(self):
-        if self.degree is Degree.KING:
-            return "King"
-        return "Pawn"
+        return self.degree
+        # if self.degree is Degree.KING:
+        #     return "King"
+        # return "Pawn"
+
+    def set_king(self):
+        self.degree = Degree.KING
+
+    def is_king(self):
+        return self.degree == Degree.KING
 
     def __str__(self):
-        if self.degree is Degree.KING:
-            return "KING"
-        return "PAWN"
+        return self.degree.name
+        # if self.degree is Degree.KING:
+        #     return "KING"
+        # return "PAWN"
