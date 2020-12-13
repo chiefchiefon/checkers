@@ -5,7 +5,7 @@ from Game.Player import Player
 
 class Color(Enum):
     WHITE = 0
-    BLACK = 1
+    black = 1
 
 
 def get_position(player, pos):
@@ -29,10 +29,10 @@ def is_crowning(source, destination):
 
 
 def calculate_destinations(player, source, opponent):
-    basic_steps = [7, 9]
+    basic_steps = (7, 9)
     destinations = set()
     for step in basic_steps:
-        polarity = (1 - 2 * player.color.value)
+        polarity = 1 - 2 * player.color.value
         single_step = source + step * polarity
         if single_step not in player.pieces and single_step not in opponent.pieces and\
                 0 <= single_step < 64 and single_step // 8 - source // 8 == 1 * polarity:
@@ -61,7 +61,7 @@ class CheckersGame:
     def __init__(self):
         self.turn = 0
         self.is_there_win = False
-        self.player = {0: Player(Color.WHITE), 1: Player(Color.BLACK)}
+        self.player = {0: Player(Color.WHITE), 1: Player(Color.black)}
 
     def run(self):
         while not self.is_there_win:
